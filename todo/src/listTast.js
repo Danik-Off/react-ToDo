@@ -10,15 +10,15 @@ function Filter({ text, onClick, active }) {
   );
 }
 
-function Task({ id, text, cheked, onEdit, onDelete, updateStatus }) {
+function Task({ id, text, checked, onEdit, onDelete, updateStatus }) {
   return (
-    <li key={id} data-id={id}>
+    <li key={id} id={id}>
       <div className="view">
         <input
           className="toggle"
           onChange={updateStatus}
           type="checkbox"
-          defaultChecked={cheked}
+          defaultChecked={checked}
         />
         <label onDoubleClick={onEdit}>{text}</label>
         <button className="destroy" onClick={onDelete}></button>
@@ -28,9 +28,7 @@ function Task({ id, text, cheked, onEdit, onDelete, updateStatus }) {
 }
 
 export default function Main() {
-  const [tasks, setTasks] = useState([
-    { text: "hello", cheked: false, editTask, deleteTask },
-  ]);
+  const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState("all");
 
   const listTask = tasks
@@ -39,16 +37,16 @@ export default function Main() {
         default:
           return true;
         case "active":
-          return task.cheked === false;
+          return task.checked === false;
         case "completed":
-          return task.cheked === true;
+          return task.checked === true;
       }
     })
     .map((item, index) => (
       <Task
         id={index}
         text={item.text}
-        cheked={item.cheked}
+        checked={item.checked}
         onEdit={editTask}
         onDelete={deleteTask}
         updateStatus={updateStatusTask}
@@ -56,24 +54,31 @@ export default function Main() {
     ));
 
   const addTask = (e) => {
+    console.log(e.key);
+    if(!((e.key === "Enter")||(e.key ===null)))
+      return null;
     const text = e.target.value;
     e.target.value = "";
     if (text)
-      setTasks([
-        ...tasks,
-        { id: Date.now(), text: text, cheked: false },
-      ]);
+      setTasks([...tasks, { id: Date.now(), text: text, checked: false }]);
   };
+
   function editTask() {
     console.log("edit");
   }
+
+
   function deleteTask() {
     console.log("delete");
   }
+
   function updateStatusTask(e) {
-    const view =e.target.parentNode;
+    const view = e.target.parentNode;
     const li = view.parentNode;
-    console.log(li.data,"delete");
+    let newTask = tasks;
+    newTask[li.id].checked = !newTask[li.id].checked ;
+    setTasks(newTask);
+    console.log(tasks.filter((task) => task.checked === false).length);
   }
 
   return (
@@ -83,13 +88,14 @@ export default function Main() {
         placeholder="What needs to be done?"
         autoFocus
         onBlur={addTask}
+        onKeyDown={addTask}
       />
       <input id="toggle-all" className="toggle-all" type="checkbox" />
       <label htmlFor="toggle-all">Mark all as complete</label>
       <ul className="todo-list">{listTask}</ul>
       <footer className="footer">
         <span className="todo-count">
-          {tasks.filter((task) => task.cheked === false).length} item left
+          {tasks.filter((task) => task.checked === false).length} item left
         </span>
         <ul className="filters">
           <Filter
