@@ -16,21 +16,30 @@ function Task({ id, text, checked, onEdit, onDelete, updateStatus }) {
       <div className="view">
         <input
           className="toggle"
-          onChange={updateStatus}
+          onChange={(e) => {
+            updateStatus(id);
+          }}
           type="checkbox"
           defaultChecked={checked}
         />
         <label onDoubleClick={onEdit}>{text}</label>
-        <button className="destroy" onClick={onDelete}></button>
+        <button
+          className="destroy"
+          onClick={() => {
+            onDelete(id);
+          }}
+        ></button>
       </div>
     </li>
   );
 }
 
-export default function Main() {
-  const [tasks, setTasks] = useState([]);
+export default function Main({oldTasks}) {
+  const [tasks, setTasks] = useState(oldTasks);
   const [filter, setFilter] = useState("all");
-  
+  const [count, setCount] = useState(0);
+
+  localStorage.setItem("tasks",JSON.stringify(tasks));
 
   const listTask = tasks
     .filter((task) => {
@@ -56,34 +65,30 @@ export default function Main() {
 
   const addTask = (e) => {
     console.log(e.key);
-    if(!((e.key === "Enter")||(e.key ===null)))
-      return null;
+    if (!(e.key === "Enter" || e.key === null)) return null;
     const text = e.target.value;
     e.target.value = "";
     if (text)
       setTasks([...tasks, { id: Date.now(), text: text, checked: false }]);
+
+    setCount(tasks.filter((task) => task.checked !== true).length);
   };
 
   function editTask() {
     console.log("edit");
   }
 
-
-  function deleteTask() {
+  function deleteTask(id) {
     console.log("delete");
+    const newTasks = tasks.filter((task)=>task.id=id);
+    setTasks(newTasks);
   }
 
-  function updateStatusTask(e) {
-    const view = e.target.parentNode;
-    const li = view.parentNode;
-    console.log(tasks);
-    let newTask =  Object.assign([], tasks);
-    
-    newTask[li.id].checked = !newTask[li.id].checked ;
-    //setTasks(newTask);
-    
-    console.log(tasks.filter((task) => task.checked === false).length);
-    console.log(tasks);
+  function updateStatusTask(id) {
+    let newTasks = Object.assign([], tasks);
+    newTasks[id].checked = !newTasks[id].checked;
+    setTasks(newTasks);
+    setCount(tasks.filter((task) => task.checked !== true).length);
   }
 
   return (
@@ -99,28 +104,30 @@ export default function Main() {
       <label htmlFor="toggle-all">Mark all as complete</label>
       <ul className="todo-list">{listTask}</ul>
       <footer className="footer">
-        <span className="todo-count">
-          {} item left
-        </span>
+        <span className="todo-count">{tasks.filter((task) => task.checked !== true).length} item left</span>
         <ul className="filters">
           <Filter
             text={"all"}
             onClick={() => {
               setFilter("all");
             }}
+            active={(filter==="all")??true}
           />
           <Filter
             text={"active"}
             onClick={() => {
               setFilter("active");
             }}
+            active={(filter==="active")??true}
           />
           <Filter
             text={"completed"}
             onClick={() => {
               setFilter("completed");
             }}
+            active={(filter==="completed")??true}
           />
+
         </ul>
         <button className="clear-completed" style={{ display: "none" }}>
           Clear completed
