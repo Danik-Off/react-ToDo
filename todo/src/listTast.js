@@ -30,6 +30,7 @@ function Task({ id, text, checked, onEdit, onDelete, updateStatus }) {
 export default function Main() {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState("all");
+  
 
   const listTask = tasks
     .filter((task) => {
@@ -75,10 +76,14 @@ export default function Main() {
   function updateStatusTask(e) {
     const view = e.target.parentNode;
     const li = view.parentNode;
-    let newTask = tasks;
+    console.log(tasks);
+    let newTask =  Object.assign([], tasks);
+    
     newTask[li.id].checked = !newTask[li.id].checked ;
-    setTasks(newTask);
+    //setTasks(newTask);
+    
     console.log(tasks.filter((task) => task.checked === false).length);
+    console.log(tasks);
   }
 
   return (
@@ -95,7 +100,7 @@ export default function Main() {
       <ul className="todo-list">{listTask}</ul>
       <footer className="footer">
         <span className="todo-count">
-          {tasks.filter((task) => task.checked === false).length} item left
+          {} item left
         </span>
         <ul className="filters">
           <Filter
