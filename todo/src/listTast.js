@@ -1,40 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useContext, useEffect } from "react";
 
-function Filter({ text, onClick, active }) {
-  return (
-    <li onClick={onClick}>
-      <a href={"#/" + text} className={active ? "selected" : null}>
-        {text}
-      </a>
-    </li>
-  );
-}
+import Filter from "./components/filter";
+import Task from "./components/task";
 
-function Task({ id, text, checked, onEdit, onDelete, updateStatus }) {
-  return (
-    <li key={id} id={id}>
-      <div className="view">
-        <input
-          className="toggle"
-          onChange={(e) => {
-            updateStatus(id);
-          }}
-          type="checkbox"
-          defaultChecked={checked}
-        />
-        <label onDoubleClick={onEdit}>{text}</label>
-        <button
-          className="destroy"
-          onClick={() => {
-            onDelete(id);
-          }}
-        ></button>
-      </div>
-    </li>
-  );
-}
 
-export default function Main({oldTasks}) {
+export default function Main() {
+  let oldTasks ;
+  useEffect(()=>{
+
+  },[])
   const [tasks, setTasks] = useState(oldTasks);
   const [filter, setFilter] = useState("all");
   const [count, setCount] = useState(0);
