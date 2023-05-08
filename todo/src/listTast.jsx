@@ -1,21 +1,19 @@
-import React, { useState,useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import Filter from "./components/filter";
 import Task from "./components/task";
 
-
 export default function Main() {
-  let oldTasks ;
-  useEffect(()=>{
-
-  },[])
+  let oldTasks;
+  useEffect(() => {}, []);
   const [tasks, setTasks] = useState(oldTasks);
   const [filter, setFilter] = useState("all");
   const [count, setCount] = useState(0);
 
-  localStorage.setItem("tasks",JSON.stringify(tasks));
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 
   const listTask = tasks
+  
     .filter((task) => {
       switch (filter) {
         default:
@@ -54,7 +52,7 @@ export default function Main() {
 
   function deleteTask(id) {
     console.log("delete");
-    const newTasks = tasks.filter((task)=>task.id=id);
+    const newTasks = tasks.filter((task) => (task.id = id));
     setTasks(newTasks);
   }
 
@@ -77,36 +75,7 @@ export default function Main() {
       <input id="toggle-all" className="toggle-all" type="checkbox" />
       <label htmlFor="toggle-all">Mark all as complete</label>
       <ul className="todo-list">{listTask}</ul>
-      <footer className="footer">
-        <span className="todo-count">{tasks.filter((task) => task.checked !== true).length} item left</span>
-        <ul className="filters">
-          <Filter
-            text={"all"}
-            onClick={() => {
-              setFilter("all");
-            }}
-            active={(filter==="all")??true}
-          />
-          <Filter
-            text={"active"}
-            onClick={() => {
-              setFilter("active");
-            }}
-            active={(filter==="active")??true}
-          />
-          <Filter
-            text={"completed"}
-            onClick={() => {
-              setFilter("completed");
-            }}
-            active={(filter==="completed")??true}
-          />
-
-        </ul>
-        <button className="clear-completed" style={{ display: "none" }}>
-          Clear completed
-        </button>
-      </footer>
+    
     </>
   );
 }
