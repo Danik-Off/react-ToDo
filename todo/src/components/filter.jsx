@@ -1,6 +1,6 @@
-export default function Filter({ text, onClick, active }) {
+export default function Filter({ text,  active }) {
     return (
-      <li onClick={onClick}>
+      <li id={text}>
         <a href={"#/" + text} className={active ? "selected" : null}>
           {text}
         </a>
