@@ -6,14 +6,14 @@ function App() {
   const newTasksJson = localStorage.getItem("tasks");
 
   let tasks = [];
-  if (newTasksJson) {
+  if (newTasksJson&&newTasksJson!=="undefinde") {
     tasks = JSON.parse(newTasksJson);
   }
 
 
 
   return (
-    <div className="todoapp">
+    <div className="todoapp"> 
       <h1>todos</h1>
 
       <section style={{ display: "block" }} className="main">
@@ -26,5 +26,3 @@ function App() {
 }
 
 export default App;
-
-
