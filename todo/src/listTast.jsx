@@ -1,19 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
-
-import Filter from "./components/filter";
 import Task from "./components/task";
+import Footer from "./components/footer";
 
 export default function Main() {
-  let oldTasks;
-  useEffect(() => {}, []);
-  const [tasks, setTasks] = useState(oldTasks);
+  
+  
+  const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState("all");
   const [count, setCount] = useState(0);
 
   localStorage.setItem("tasks", JSON.stringify(tasks));
-
+  useEffect(() => {setTasks(JSON.parse(localStorage.getItem("tasks")))},[]);
   const listTask = tasks
-  
+
     .filter((task) => {
       switch (filter) {
         default:
@@ -75,7 +74,11 @@ export default function Main() {
       <input id="toggle-all" className="toggle-all" type="checkbox" />
       <label htmlFor="toggle-all">Mark all as complete</label>
       <ul className="todo-list">{listTask}</ul>
-    
+      <Footer
+        count={tasks.filter((task) => task.checked !== true).length}
+        activeFilter={filter}
+        onChooseFilter={setFilter}
+      ></Footer>
     </>
   );
 }
